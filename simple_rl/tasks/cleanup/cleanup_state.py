@@ -3,8 +3,7 @@ import random
 
 from simple_rl.mdp.StateClass import State
 
-from simple_rl.tasks.cleanup.CleanUpMDPClass import CleanUpMDP
-
+from simple_rl.tasks.cleanup.CleanupMDPClass import CleanUpMDP
 
 class CleanUpState(State):
     def __init__(self, task, x, y, blocks=[], doors=[], rooms=[]):

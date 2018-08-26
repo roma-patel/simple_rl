@@ -3,9 +3,9 @@
 # Python imports.
 from __future__ import print_function
 import random
-import sys, os
+import sys
+import os
 import numpy as np
-from collections import defaultdict
 
 # Other imports.
 from simple_rl.mdp.MDPClass import MDP
@@ -26,13 +26,14 @@ class GridWorldMDP(MDP):
     def __init__(self,
                 width=5,
                 height=3,
-                init_loc=(1, 1),
+                init_loc=(1,1),
                 rand_init=False,
-                goal_locs=[(5, 3)],
+                goal_locs=[(5,3)],
                 lava_locs=[()],
                 walls=[],
                 is_goal_terminal=True,
                 gamma=0.99,
+                init_state=None,
                 slip_prob=0.0,
                 step_cost=0.0,
                 lava_cost=0.01,
@@ -44,8 +45,6 @@ class GridWorldMDP(MDP):
             init_loc (tuple: (int, int))
             goal_locs (list of tuples: [(int, int)...])
             lava_locs (list of tuples: [(int, int)...]): These locations return -1 reward.
-            walls (list)
-            is_goal_terminal (bool)
         '''
 
         # Setup init location.
@@ -55,7 +54,7 @@ class GridWorldMDP(MDP):
             while init_loc in walls:
                 init_loc = random.randint(1, width), random.randint(1, height)
         self.init_loc = init_loc
-        init_state = GridWorldState(init_loc[0], init_loc[1])
+        init_state = GridWorldState(init_loc[0], init_loc[1]) if init_state is None or rand_init else init_state
 
         MDP.__init__(self, GridWorldMDP.ACTIONS, self._transition_func, self._reward_func, init_state=init_state, gamma=gamma)
 
@@ -72,27 +71,6 @@ class GridWorldMDP(MDP):
         self.slip_prob = slip_prob
         self.name = name
         self.lava_locs = lava_locs
-
-    def get_parameters(self):
-        '''
-        Returns:
-            (dict) key=param_name (str) --> val=param_val (object).
-        '''
-        param_dict = defaultdict(int)
-        param_dict["width"] = self.width
-        param_dict["height"] = self.height
-        param_dict["init_loc"] = self.init_loc
-        param_dict["rand_init"] = self.rand_init
-        param_dict["goal_locs"] = self.goal_locs
-        param_dict["lava_locs"] = self.lava_locs
-        param_dict["walls"] = self.walls
-        param_dict["is_goal_terminal"] = self.is_goal_terminal
-        param_dict["gamma"] = self.gamma
-        param_dict["slip_prob"] = self.slip_prob
-        param_dict["step_cost"] = self.step_cost
-        param_dict["lava_cost"] = self.lava_cost
-   
-        return param_dict
 
     def set_slip_prob(self, slip_prob):
         self.slip_prob = slip_prob
